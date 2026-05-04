@@ -5,6 +5,8 @@ const meses = [
   "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
 ];
 
+const diasSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
 // LOCAL STORAGE
 function salvar(chave, valor) {
   localStorage.setItem(chave, valor);
@@ -16,7 +18,7 @@ function pegar(chave) {
 
 // PAGINA 1 - MESES
 function mostrarMeses() {
-  app.innerHTML = "<h2>Escolha um mês</h2><div class='grid'></div>";
+  app.innerHTML = "<h2>Escolha um mês de 2026</h2><div class='grid'></div>";
   const grid = document.querySelector(".grid");
 
   meses.forEach((mes, i) => {
@@ -28,17 +30,29 @@ function mostrarMeses() {
 }
 
 // PAGINA 2 - DIAS
-function mostrarDias(mes) {
-  const ano = new Date().getFullYear();
-  const totalDias = new Date(ano, mes + 1, 0).getDate();
+function mostrarDias(mesIndex) {
+  const ano = 2026;
+  const totalDias = new Date(ano, mesIndex + 1, 0).getDate();
+  
+  const primeiroDiaDaSemana = new Date(ano, mesIndex, 1).getDay();
 
-  app.innerHTML = `<h2>${meses[mes]}</h2><div class='grid'></div>`;
-  const grid = document.querySelector(".grid");
+  app.innerHTML = `<h2>${meses[mesIndex]} ${ano}</h2><div class='grid-dias'></div>`;
+  const grid = document.querySelector(".grid-dias");
+
+  for (let i = 0; i < primeiroDiaDaSemana; i++) {
+    const divVazia = document.createElement("div");
+    divVazia.className = "vazio";
+    grid.appendChild(divVazia);
+  }
 
   for (let d = 1; d <= totalDias; d++) {
+    const data = new Date(ano, mesIndex, d);
+    const diaSemanaNome = diasSemana[data.getDay()];
+
     const btn = document.createElement("button");
-    btn.innerText = d;
-    btn.onclick = () => mostrarHoras(d, mes);
+    btn.innerHTML = `<span class='semana'>${diaSemanaNome}</span><strong>${d}</strong>`;
+    
+    btn.onclick = () => mostrarHoras(d, mesIndex);
     grid.appendChild(btn);
   }
 
@@ -49,39 +63,54 @@ function mostrarDias(mes) {
   app.appendChild(voltar);
 }
 
-// PAGINA 3 - HORAS + AGENDAMENTO
-function mostrarHoras(dia, mes) {
-  app.innerHTML = `<h2>${dia} de ${meses[mes]}</h2><div class='grid'></div>`;
-  const grid = document.querySelector(".grid");
+//Compromisso
+function renderizarConteudoBotao(hora, compromisso) {
+  const horaFormatada = hora < 10 ? `0${hora}:00` : `${hora}:00`;
+  
+  if (compromisso) {
+    return `
+      <strong>${horaFormatada}</strong>
+      <div class="texto-compromisso">${compromisso}</div>
+    `;
+  }
+  
+  return horaFormatada;
+}
 
-  for (let h = 8; h <= 18; h++) {
-    const chave = `${mes}-${dia}-${h}`;
+// PAGINA 3 - HORAS + AGENDAMENTO 
+function mostrarHoras(dia, mesIndex) {
+  app.innerHTML = `<h2>${dia} de ${meses[mesIndex]}</h2><div class='grid-horas'></div>`;
+  const grid = document.querySelector(".grid-horas");
+
+  for (let h = 0; h <= 23; h++) {
+    const chave = `2026-${mesIndex}-${dia}-${h}`;
     const compromisso = pegar(chave);
-
     const btn = document.createElement("button");
-    btn.innerText = `${h}:00`;
+
+    btn.innerHTML = renderizarConteudoBotao(h, compromisso);
 
     if (compromisso) {
       btn.classList.add("agendado");
-      btn.title = compromisso;
     }
 
     btn.onclick = () => {
-      const texto = prompt("Digite seu compromisso:");
-      if (texto) {
-        salvar(chave, texto);
-        mostrarHoras(dia, mes);
+      const horaFormatada = h < 10 ? `0${h}:00` : `${h}:00`;
+      const texto = prompt(`Compromisso para as ${horaFormatada}:`, compromisso || "");
+      
+      if (texto !== null) {
+        texto ? salvar(chave, texto) : localStorage.removeItem(chave);
+        mostrarHoras(dia, mesIndex);
       }
     };
 
     grid.appendChild(btn);
   }
 
-  const voltar = document.createElement("button");
-  voltar.innerText = "Voltar";
-  voltar.className = "voltar";
-  voltar.onclick = () => mostrarDias(mes);
-  app.appendChild(voltar);
+  const btnVoltar = document.createElement("button");
+  btnVoltar.innerText = "Voltar";
+  btnVoltar.className = "voltar";
+  btnVoltar.onclick = () => mostrarDias(mesIndex);
+  app.appendChild(btnVoltar);
 }
 
 // INICIO
