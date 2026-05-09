@@ -98,3 +98,87 @@ button:hover {
 .agendado {
   background: #27ae60 !important;
 }
+
+/* Container de Scroll da Agenda */
+.grid-horas-scroll {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.linha-hora {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+/* A TELINHA (MODAL) */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); /* Escurece o fundo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: white;
+    width: 350px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    background: #1a73e8; /* Azul do Google Agenda */
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header button {
+    background: none; border: none; color: white; cursor: pointer; font-size: 18px;
+}
+
+.modal-body { padding: 20px; }
+
+.modal-body label { display: block; font-size: 12px; color: #666; margin-top: 10px; }
+
+.modal-body input {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #1a73e8;
+    margin-bottom: 10px;
+    outline: none;
+}
+
+.horarios-flex {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.modal-footer {
+    padding: 15px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancelar { background: none; border: none; color: #1a73e8; cursor: pointer; }
+.btn-salvar { 
+    background: #1a73e8; 
+    color: white; 
+    border: none; 
+    padding: 8px 20px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+}

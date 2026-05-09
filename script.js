@@ -79,38 +79,70 @@ function renderizarConteudoBotao(hora, compromisso) {
 
 // PAGINA 3 - HORAS + AGENDAMENTO 
 function mostrarHoras(dia, mesIndex) {
-  app.innerHTML = `<h2>${dia} de ${meses[mesIndex]}</h2><div class='grid-horas'></div>`;
-  const grid = document.querySelector(".grid-horas");
+    const ano = 2026;
+    app.innerHTML = `<h2>${dia} de ${meses[mesIndex]}</h2><div class='grid-horas-scroll'></div>`;
+    const grid = document.querySelector(".grid-horas-scroll");
 
-  for (let h = 0; h <= 23; h++) {
-    const chave = `2026-${mesIndex}-${dia}-${h}`;
-    const compromisso = pegar(chave);
-    const btn = document.createElement("button");
+    for (let h = 0; h <= 23; h++) {
+        const chave = `${ano}-${mesIndex}-${dia}-${h}`;
+        const compromisso = pegar(chave);
+        const btn = document.createElement("div");
+        btn.className = "linha-hora";
+        
+        const horaFormatada = h < 10 ? `0${h}:00` : `${h}:00`;
+        btn.innerHTML = `<span>${horaFormatada}</span><div class="texto">${compromisso || ""}</div>`;
 
-    btn.innerHTML = renderizarConteudoBotao(h, compromisso);
+        btn.onclick = () => {
+            const modal = document.createElement("div");
+            modal.className = "modal-overlay";
+            modal.innerHTML = `
+                <div class="modal-box">
+                    <div class="modal-header">
+                        <span>Novo evento</span>
+                        <button onclick="this.closest('.modal-overlay').remove()">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>${dia} de ${meses[mesIndex]} de ${ano}</p>
+                        <label>Título</label>
+                        <input type="text" id="titulo-comp" placeholder="Adicionar título" value="${compromisso || ''}">
+                        
+                        <div class="horarios-flex">
+                            <div>
+                                <label>Início</label>
+                                <input type="time" id="hora-inicio" value="${horaFormatada}">
+                            </div>
+                            <span>→</span>
+                            <div>
+                                <label>Fim</label>
+                                <input type="time" id="hora-fim" value="${(h+1) < 10 ? '0'+(h+1) : (h+1)}:00">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-cancelar" onclick="this.closest('.modal-overlay').remove()">Cancelar</button>
+                        <button class="btn-salvar" id="salvar-modal">Salvar</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
 
-    if (compromisso) {
-      btn.classList.add("agendado");
+            modal.querySelector("#salvar-modal").onclick = () => {
+                const texto = modal.querySelector("#titulo-comp").value;
+                if (texto.trim() !== "") {
+                    salvar(chave, texto);
+                    modal.remove();
+                    mostrarHoras(dia, mesIndex);
+                }
+            };
+        };
+        grid.appendChild(btn);
     }
 
-    btn.onclick = () => {
-      const horaFormatada = h < 10 ? `0${h}:00` : `${h}:00`;
-      const texto = prompt(`Compromisso para as ${horaFormatada}:`, compromisso || "");
-      
-      if (texto !== null) {
-        texto ? salvar(chave, texto) : localStorage.removeItem(chave);
-        mostrarHoras(dia, mesIndex);
-      }
-    };
-
-    grid.appendChild(btn);
-  }
-
-  const btnVoltar = document.createElement("button");
-  btnVoltar.innerText = "Voltar";
-  btnVoltar.className = "voltar";
-  btnVoltar.onclick = () => mostrarDias(mesIndex);
-  app.appendChild(btnVoltar);
+    const voltar = document.createElement("button");
+    voltar.innerText = "Voltar";
+    voltar.className = "voltar";
+    voltar.onclick = () => mostrarDias(mesIndex);
+    app.appendChild(voltar);
 }
 
 // INICIO
