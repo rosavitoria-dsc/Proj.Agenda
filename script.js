@@ -271,6 +271,7 @@ function criarLinhaHora(
 }
 
 // ==========================
+// ==========================
 // EDITAR EVENTO
 // ==========================
 function configurarEditarEvento(
@@ -290,25 +291,143 @@ function configurarEditarEvento(
 
         const index = botao.dataset.index;
 
-        const novoTexto = prompt(
-          "Editar evento:",
-          compromissos[index]
-        );
+        const eventoAtual = compromissos[index];
 
-        if (
-          novoTexto !== null &&
-          novoTexto.trim() !== ""
-        ) {
+        const hora = chave.split("-")[3];
 
-          compromissos[index] = novoTexto;
+        const horaFormatada = hora < 10
+          ? `0${hora}:00`
+          : `${hora}:00`;
 
-          localStorage.setItem(
-            chave,
-            JSON.stringify(compromissos)
-          );
+        // CRIAR MODAL
+        const modal = document.createElement("div");
 
-          mostrarHoras(dia, mesIndex);
-        }
+        modal.className = "modal-overlay";
+
+        modal.innerHTML = `
+          <div class="modal-box">
+
+            <div class="modal-header">
+
+              <span>Editar evento</span>
+
+              <button onclick="this.closest('.modal-overlay').remove()">
+                ✕
+              </button>
+
+            </div>
+
+            <div class="modal-body">
+
+              <p>
+                ${dia} de ${meses[mesIndex]} de 2026
+              </p>
+
+              <label>Título</label>
+
+              <input
+                type="text"
+                id="editar-comp"
+                value="${eventoAtual}"
+              >
+
+              <div class="horarios-flex">
+
+                <div>
+
+                  <label>Início</label>
+
+                  <input
+                    type="time"
+                    id="hora-inicio-editar"
+                    value="${horaFormatada}"
+                  >
+
+                </div>
+
+                <span>→</span>
+
+                <div>
+
+                  <label>Fim</label>
+
+                  <input
+                    type="time"
+                    value="${(Number(hora) + 1) < 10 ? '0' + (Number(hora) + 1) : (Number(hora) + 1)}:00"
+                  >
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+              <button
+                class="btn-cancelar"
+                onclick="this.closest('.modal-overlay').remove()"
+              >
+                Cancelar
+              </button>
+
+              <button
+                class="btn-salvar"
+                id="salvar-edicao"
+              >
+                Salvar
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // SALVAR EDIÇÃO
+        modal.querySelector("#salvar-edicao")
+          .onclick = () => {
+
+            const novoTexto = modal
+              .querySelector("#editar-comp")
+              .value;
+
+            const novaHora = modal
+              .querySelector("#hora-inicio-editar")
+              .value
+              .split(":")[0];
+
+            if (novoTexto.trim() !== "") {
+
+              // REMOVE EVENTO ANTIGO
+              compromissos.splice(index, 1);
+
+              localStorage.setItem(
+                chave,
+                JSON.stringify(compromissos)
+              );
+
+              // NOVA CHAVE
+              const novaChave =
+                `2026-${mesIndex}-${dia}-${Number(novaHora)}`;
+
+              // PEGA EVENTOS DA NOVA HORA
+              const eventosNovaHora = pegar(novaChave);
+
+              // ADICIONA EVENTO EDITADO
+              eventosNovaHora.push(novoTexto);
+
+              localStorage.setItem(
+                novaChave,
+                JSON.stringify(eventosNovaHora)
+              );
+
+              modal.remove();
+
+              mostrarHoras(dia, mesIndex);
+            }
+          };
       };
     });
 }
