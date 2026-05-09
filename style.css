@@ -4,7 +4,7 @@ body {
   margin: 0;
 }
 
-#titulo{
+#titulo {
   text-align: center;
   margin-top: 20px;
 }
@@ -15,7 +15,7 @@ body {
   background: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
@@ -31,7 +31,7 @@ h2 {
 
 .grid-dias {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); 
+  grid-template-columns: repeat(7, 1fr);
   gap: 8px;
   margin-top: 20px;
   max-width: 500px;
@@ -66,13 +66,13 @@ h2 {
 
 .grid-horas {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); 
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   margin-top: 15px;
 }
 
 .agendado {
-  background-color: #2ecc71 !important; 
+  background-color: #2ecc71 !important;
   color: white;
 }
 
@@ -101,84 +101,207 @@ button:hover {
 
 /* Container de Scroll da Agenda */
 .grid-horas-scroll {
-    height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
 .linha-hora {
-    display: flex;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
+  display: flex;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
 }
 
 /* A TELINHA (MODAL) */
 .modal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5); /* Escurece o fundo */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  /* Escurece o fundo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .modal-box {
-    background: white;
-    width: 350px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  background: white;
+  width: 350px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
-    background: #1a73e8; /* Azul do Google Agenda */
-    color: white;
-    padding: 12px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background: #1a73e8;
+  /* Azul do Google Agenda */
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .modal-header button {
-    background: none; border: none; color: white; cursor: pointer; font-size: 18px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
 }
 
-.modal-body { padding: 20px; }
+.modal-body {
+  padding: 20px;
+}
 
-.modal-body label { display: block; font-size: 12px; color: #666; margin-top: 10px; }
+.modal-body label {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-top: 10px;
+}
 
 .modal-body input {
-    width: 100%;
-    padding: 8px 0;
-    border: none;
-    border-bottom: 1px solid #1a73e8;
-    margin-bottom: 10px;
-    outline: none;
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-bottom: 1px solid #1a73e8;
+  margin-bottom: 10px;
+  outline: none;
 }
 
 .horarios-flex {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .modal-footer {
-    padding: 15px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+  padding: 15px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
-.btn-cancelar { background: none; border: none; color: #1a73e8; cursor: pointer; }
-.btn-salvar { 
-    background: #1a73e8; 
-    color: white; 
-    border: none; 
-    padding: 8px 20px; 
-    border-radius: 4px; 
-    cursor: pointer; 
+.btn-cancelar {
+  background: none;
+  border: none;
+  color: #1a73e8;
+  cursor: pointer;
+}
+
+.btn-salvar {
+  background: #1a73e8;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.linha-hora {
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 20px;
+
+  padding: 18px;
+
+  border-bottom: 1px solid #e5e5e5;
+
+  transition: 0.2s;
+}
+
+.linha-hora:hover {
+  background: #f8f8f8;
+}
+
+.hora-label {
+
+  min-width: 70px;
+
+  font-weight: bold;
+
+  font-size: 18px;
+
+  color: #444;
+}
+
+.texto {
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  width: 100%;
+}
+
+.evento-item {
+
+  background: #f3f4f6;
+
+  border-radius: 12px;
+
+  padding: 12px 14px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 15px;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.evento-texto {
+
+  font-size: 15px;
+
+  color: #222;
+
+  word-break: break-word;
+}
+
+.evento-acoes {
+
+  display: flex;
+
+  gap: 8px;
+}
+
+.editar-btn,
+.remover-btn {
+
+  border: none;
+
+  background: white;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  font-size: 15px;
+}
+
+.editar-btn:hover {
+  background: #dbeafe;
+}
+
+.remover-btn:hover {
+  background: #fee2e2;
 }
